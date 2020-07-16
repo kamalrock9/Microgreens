@@ -10,7 +10,7 @@ import RazorpayCheckout from "react-native-razorpay";
 import {ApiClient} from "service";
 import axios from "axios";
 import InAppBrowser from "react-native-inappbrowser-reborn";
-import Paytm from "react-native-paytm";
+//import Paytm from "react-native-paytm";
 import {isEmpty} from "lodash";
 
 function PaymentPage({navigation}) {
