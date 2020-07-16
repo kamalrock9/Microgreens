@@ -11,12 +11,12 @@ const Constants = {
 };
 
 const ConstantsDemo = {
-  storeName: "WooApp",
-  baseURL: "https://app.tutiixx.com",
+  storeName: "Microgreens",
+  baseURL: "http://3.7.234.56/",
   path: "/wp-json/wc/v2",
   keys: {
-    consumerKey: "ck_240313b54a926b379613c352b179588ee757807f",
-    consumerSecret: "cs_406cf9c8094af5a5d2f987e1d3a9160fa9b6bfdb",
+    consumerKey: "ck_1edc598771d51f6d0de60add1740d70586e7ae8a",
+    consumerSecret: "cs_baae3de803d7e9bfb3d0ee24fa852e527ecc19d8",
   },
 };
 

@@ -271,7 +271,7 @@ function Auth({navigation}) {
         <View style={styles.slide1}>
           <Text style={styles.title}>{t("WELCOME_TO_WOOAPP", {value: Constants.storeName})}</Text>
           <Text style={styles.subtitle}>{t("FASHION_INFO")}</Text>
-          <View style={{width: "100%", flexDirection: "row", marginTop: 20}}>
+          {/* <View style={{width: "100%", flexDirection: "row", marginTop: 20}}>
             <Button
               style={[styles.socialBtn, {flex: 1, marginEnd: 8}]}
               onPress={socialLogin("facebook")}>
@@ -284,12 +284,12 @@ function Auth({navigation}) {
               <Icon name="logo-google" size={20} color="#FFF" />
               <Text style={[styles.socialBtnText, {marginStart: 8}]}>{t("GOOGLE")}</Text>
             </Button>
-          </View>
-          <View style={{width: "100%", flexDirection: "row", marginVertical: 30}}>
+          </View> */}
+          {/* <View style={{width: "100%", flexDirection: "row", marginVertical: 30}}>
             <View style={styles.line} />
             <Text style={styles.or}>{t("LOGIN_METHODS")}</Text>
             <View style={styles.line} />
-          </View>
+          </View> */}
 
           <FloatingTextinput
             label={t("EMAIL")}
@@ -327,7 +327,7 @@ function Auth({navigation}) {
         <View style={styles.slide1}>
           <Text style={styles.title}>{t("WELCOME_TO_WOOAPP", {value: Constants.storeName})}</Text>
           <Text style={styles.subtitle}>{t("FASHION_INFO")}</Text>
-          <View style={{width: "100%", flexDirection: "row", marginTop: 20}}>
+          {/* <View style={{width: "100%", flexDirection: "row", marginTop: 20}}>
             <Button
               style={[styles.socialBtn, {flex: 1, marginEnd: 8}]}
               onPress={socialLogin("facebook")}>
@@ -340,12 +340,12 @@ function Auth({navigation}) {
               <Icon name="logo-google" size={20} color="#FFF" />
               <Text style={[styles.socialBtnText, {marginStart: 8}]}>{t("GOOGLE")}</Text>
             </Button>
-          </View>
-          <View style={{width: "100%", flexDirection: "row", marginVertical: 30}}>
+          </View> */}
+          {/* <View style={{width: "100%", flexDirection: "row", marginVertical: 30}}>
             <View style={styles.line} />
             <Text style={styles.or}>{t("OR")}</Text>
             <View style={styles.line} />
-          </View>
+          </View> */}
 
           <FloatingTextinput
             label={t("FIRST_NAME")}

@@ -20,26 +20,30 @@ function ProductItem({containerStyle, width: width, item}) {
     <TouchableWithoutFeedback onPress={goToProductDetails}>
       <View style={[containerStyle, styles.container, {width}]}>
         {item.images.length > 0 && (
-          <FitImage source={{uri: item.images[0].src}} indicatorColor={accent_color} />
+          <FitImage
+            style={{borderTopLeftRadius: 20, borderTopRightRadius: 20}}
+            source={{uri: item.images[0].src}}
+            indicatorColor={accent_color}
+          />
         )}
         <View>
           <Text style={[styles.itemMargin, {fontWeight: "600"}]} numberOfLines={1}>
             {item.name}
           </Text>
-          {item.price_html != "" && (
+          {/* {item.price_html != "" && (
             <HTMLRender
               html={item.price_html}
               containerStyle={styles.itemMargin}
               baseFontStyle={{fontSize: 13}}
             />
-          )}
+          )} */}
           <StarRating
             disabled
             maxStars={5}
             rating={parseInt(item.average_rating)}
             containerStyle={[styles.itemMargin, styles.star]}
             starStyle={{marginEnd: 5}}
-            starSize={14}
+            starSize={12}
             halfStarEnabled
             emptyStarColor={accent_color}
             fullStarColor={accent_color}
@@ -75,7 +79,7 @@ function ProductItem({containerStyle, width: width, item}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderRadius: 3,
+    borderRadius: 20,
     borderWidth: 0.5,
     borderColor: "#bdbdbd",
     paddingBottom: 8,
@@ -92,6 +96,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     end: 0,
     top: 0,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#4EB5AC",
+    alignItems: "center",
+    justifyContent: "center",
+    marginEnd: 4,
+    marginTop: 4,
   },
 });
 

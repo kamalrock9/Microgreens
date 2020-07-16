@@ -6,8 +6,9 @@ import {
   ActivityIndicator,
   FlatList,
   unstable_batchedUpdates,
+  Dimensions,
 } from "react-native";
-import {Slider, Toolbar, Container} from "components";
+import {Slider, Toolbar, Container, Text, Icon, Button} from "components";
 import {useSelector, useDispatch} from "react-redux";
 import {isEmpty} from "lodash";
 import CategoryItem from "./CategoryItem";
@@ -18,9 +19,11 @@ import {ApiClient} from "service";
 import {useTranslation} from "react-i18next";
 import OneSignal from "react-native-onesignal";
 
+const {height} = Dimensions.get("window");
 function HomeScreen({navigation}) {
   const [loading, setLoading] = useState(false);
   const layout = useSelector(state => state.homeLayout);
+  const {primary_color} = useSelector(state => state.appSettings);
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
@@ -89,20 +92,38 @@ function HomeScreen({navigation}) {
     return <View />;
   } else {
     return (
-      <Container>
-        <Toolbar menuButton cartButton wishListButton searchButton title="HOME" />
+      <Container style={{backgroundColor: "#F5F3F4"}}>
+        <Toolbar menuButton cartButton wishListButton title="HOME" />
         <ScrollView nestedScrollEnabled={true}>
-          <View>
+          <View style={[styles.sliderView, {backgroundColor: primary_color}]}>
             <Slider
               //autoplay
               //autoplayLoop
               //autoplayDelay={5}
               data={layout.banner}
-              approxHeight={180}
+              approxHeight={100}
+              margin_Top={-50}
+              borderradius={20}
+              originalheight={height / 4}
             />
           </View>
 
+          <View
+            style={{
+              marginHorizontal: 16,
+              borderRadius: 25,
+              elevation: 2,
+              backgroundColor: "white",
+              marginTop: -20,
+            }}>
+            <Button style={styles.button} onPress={goToPage("Search")}>
+              <Text style={{color: "grey"}}>Search Your Product...</Text>
+              <Icon name="search1" type="AntDesign" size={28} color={"grey"} />
+            </Button>
+          </View>
+
           <SectonHeader
+            colorTitleEnd={primary_color}
             title={t("ALL_CATEGORIES")}
             titleEnd={t("VIEW_ALL")}
             onPress={openCategories}
@@ -121,8 +142,9 @@ function HomeScreen({navigation}) {
           {layout.featured_products && layout.featured_products.length > 0 && (
             <>
               <SectonHeader
+                colorTitleEnd={primary_color}
                 title={t("FEATURED")}
-                titleEnd={t("SEE_MORE")}
+                titleEnd={t("VIEW_ALL")}
                 style={{marginTop: 8}}
                 onPress={goToPage("ProductScreen", {featured: true})}
               />
@@ -133,8 +155,9 @@ function HomeScreen({navigation}) {
           {layout.top_rated_products && layout.top_rated_products.length > 0 && (
             <>
               <SectonHeader
+                colorTitleEnd={primary_color}
                 title={t("TOP_SELLERS")}
-                titleEnd={t("SEE_MORE")}
+                titleEnd={t("VIEW_ALL")}
                 style={{marginTop: 8}}
                 onPress={goToPage("ProductScreen", {sortby: "rating"})}
               />
@@ -145,8 +168,9 @@ function HomeScreen({navigation}) {
           {layout.sale_products && layout.sale_products.length > 0 && (
             <>
               <SectonHeader
+                colorTitleEnd={primary_color}
                 title={t("TRENDING_OFFERS")}
-                titleEnd={t("SEE_MORE")}
+                titleEnd={t("VIEW_ALL")}
                 style={{marginTop: 8}}
                 onPress={goToPage("ProductScreen", {on_sale: "true"})}
               />
@@ -155,15 +179,16 @@ function HomeScreen({navigation}) {
           )}
 
           {layout.top_seller && layout.top_seller.length > 0 && (
-            <>
+            <View style={{marginBottom: 10}}>
               <SectonHeader
+                colorTitleEnd={primary_color}
                 title={t("TOP_SELLERS")}
-                titleEnd={t("SEE_MORE")}
+                titleEnd={t("VIEW_ALL")}
                 style={{marginTop: 8}}
                 onPress={goToPage("ProductScreen", {sortby: "popularity"})}
               />
               <ProductsRow keyPrefix="topseller" products={layout.top_seller} />
-            </>
+            </View>
           )}
         </ScrollView>
       </Container>
@@ -180,6 +205,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  sliderView: {
+    paddingTop: 30,
+    paddingBottom: 80,
+    borderBottomStartRadius: 30,
+    borderBottomRightRadius: 30,
   },
 });
 

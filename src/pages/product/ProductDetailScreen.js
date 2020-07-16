@@ -5,9 +5,9 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  TouchableOpacity,
   FlatList,
   Linking,
+  Dimensions,
 } from "react-native";
 import {connect} from "react-redux";
 import StarRating from "react-native-star-rating";
@@ -36,7 +36,10 @@ import Toast from "react-native-simple-toast";
 import {withTranslation} from "react-i18next";
 import Constants from "../../service/Config";
 import InAppBrowser from "react-native-inappbrowser-reborn";
+import SwiperFlatList from "react-native-swiper-flatlist";
+import FitImage from "react-native-fit-image";
 
+const {width, height} = Dimensions.get("window");
 class ProductDetailScreen extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -74,48 +77,48 @@ class ProductDetailScreen extends React.PureComponent {
     if (this.state.product.upsell_ids.length > 0) {
       ApiClient.get("/get-products-by-id", {include: this.state.product.upsell_ids.join()})
         .then(({data}) => {
-          this.setState((prevState) => ({
+          this.setState(prevState => ({
             product: {...prevState.product, upsell: data},
           }));
         })
-        .catch((error) => {});
+        .catch(error => {});
     }
     if (this.state.product.related_ids.length > 0) {
       ApiClient.get("/get-products-by-id", {include: this.state.product.related_ids.join()})
         .then(({data}) => {
-          this.setState((prevState) => ({
+          this.setState(prevState => ({
             product: {...prevState.product, related: data},
           }));
         })
-        .catch((error) => {});
+        .catch(error => {});
     }
     if (this.state.product.grouped_products.length > 0) {
       ApiClient.get("/get-products-by-id", {include: this.state.product.grouped_products.join()})
         .then(({data}) => {
-          let newData = data.map((item) => {
+          let newData = data.map(item => {
             let varia = {...item, quantity: 0};
             return varia;
           });
           console.log(newData);
-          this.setState((prevState) => ({
+          this.setState(prevState => ({
             product: {...prevState.product, group: newData},
           }));
         })
-        .catch((error) => {});
+        .catch(error => {});
     }
   };
 
   shareProduct = () => {
     RNFetchBlob.fetch("GET", this.state.product.images[0].src)
-      .then((resp) => {
+      .then(resp => {
         console.log("response : ", resp);
         let base64image = resp.data;
         this.share("data:image/png;base64," + base64image);
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
 
-  share = (base64image) => {
+  share = base64image => {
     let shareOptions = {
       title: "Share " + this.state.product.name,
       url: base64image,
@@ -123,10 +126,10 @@ class ProductDetailScreen extends React.PureComponent {
       subject: this.state.product.name,
     };
     Share.open(shareOptions)
-      .then((res) => {
+      .then(res => {
         console.log(res);
       })
-      .catch((err) => {
+      .catch(err => {
         err && console.log(err);
       });
   };
@@ -146,7 +149,7 @@ class ProductDetailScreen extends React.PureComponent {
         enableUrlBarHiding: true,
         enableDefaultShare: true,
         forceCloseOnRedirection: true,
-      }).then((result) => {
+      }).then(result => {
         //Toast.show(result);
       });
     } else {
@@ -154,7 +157,8 @@ class ProductDetailScreen extends React.PureComponent {
     }
   };
 
-  _increaseCounter = (i) => () => {
+  _increaseCounter = i => {
+    console.log("hey");
     const {variation, product} = this.state;
     let quantity = this.state.quantity;
 
@@ -204,7 +208,7 @@ class ProductDetailScreen extends React.PureComponent {
     this.setState({quantity});
   };
 
-  _decreaseCounter = (index) => {
+  _decreaseCounter = index => {
     const {quantity, product} = this.state;
     console.log(quantity);
     console.log(product);
@@ -222,7 +226,7 @@ class ProductDetailScreen extends React.PureComponent {
     }
   };
 
-  checkBox = (i) => () => {
+  checkBox = i => () => {
     const {quantity, product, checked} = this.state;
     console.log(quantity);
     console.log(product);
@@ -241,7 +245,7 @@ class ProductDetailScreen extends React.PureComponent {
     }
   };
 
-  gotoProductDetailPage = (item) => () => {
+  gotoProductDetailPage = item => () => {
     console.log("kamal");
     this.props.navigation.push("ProductDetailScreen", item);
   };
@@ -253,7 +257,7 @@ class ProductDetailScreen extends React.PureComponent {
     switch (product.type) {
       case "grouped":
         if (
-          product.group.every((element) => {
+          product.group.every(element => {
             return element.quantity == 0;
           })
         ) {
@@ -302,7 +306,7 @@ class ProductDetailScreen extends React.PureComponent {
     ApiClient.post("/cart/add", data)
       .then(({data}) => {
         this.setState({
-          cartMsg: Array.isArray(data) ? data.map((e) => e.message).join(", ") : data.message,
+          cartMsg: Array.isArray(data) ? data.map(e => e.message).join(", ") : data.message,
         });
         if (this.isError(data)) {
           console.log("error");
@@ -315,14 +319,14 @@ class ProductDetailScreen extends React.PureComponent {
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
 
   isError(data) {
     if (Array.isArray(data)) {
-      return data.every((e) => e.code === "0");
+      return data.every(e => e.code === "0");
     } else {
       return data.code == 0;
     }
@@ -332,13 +336,13 @@ class ProductDetailScreen extends React.PureComponent {
     this.setState({modalVisible: false});
   };
 
-  gotoReviews = (product) => () => {
+  gotoReviews = product => () => {
     this.props.navigation.navigate("Reviews", product);
   };
 
-  onVariationChange = (item) => (option) => {
+  onVariationChange = item => option => {
     this.setState(
-      (prevState) => ({
+      prevState => ({
         selectedAttrs: {
           ...prevState.selectedAttrs,
           [item.slug]: option && option.slug ? option.slug : option,
@@ -365,7 +369,7 @@ class ProductDetailScreen extends React.PureComponent {
           this.setState({variation: data});
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.show("Something went wrong! Try later");
       });
   }
@@ -382,7 +386,7 @@ class ProductDetailScreen extends React.PureComponent {
         console.log(data);
         this.setState({loading: false, deliverDetails: data});
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({loading: false});
         console.log(error);
       });
@@ -435,6 +439,18 @@ class ProductDetailScreen extends React.PureComponent {
 
   _keyExtractor = (index, item) => index + item;
 
+  renderItem = ({item, index}) => (
+    <View style={{width, backgroundColor: "#F8F6F7"}}>
+      <FitImage
+        originalHeight={height / 1.8}
+        originalWidth={width - 16}
+        source={{uri: item.banner_url || item.src}}
+      />
+    </View>
+  );
+
+  keyExtractor = item => item.id.toString();
+
   render() {
     const {accent_color, pincode_active} = this.props.appSettings;
     const {t} = this.props;
@@ -453,256 +469,268 @@ class ProductDetailScreen extends React.PureComponent {
         <Container style={styles.container}>
           <Toolbar backButton title={product.name} cartButton />
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <View>
-              <Slider
+            <View style={{backgroundColor: "#F8F6F7", paddingVertical: 40}}>
+              <SwiperFlatList
                 data={
                   variation.image
-                    ? unionBy([variation.image], product.images, (x) => x.id)
+                    ? unionBy([variation.image], product.images, x => x.id)
                     : product.images
                 }
+                nestedScrollEnabled={true}
+                paginationActiveColor="black"
+                showPagination={product.images.length > 1 ? true : false}
+                paginationStyleItem={{
+                  width: 8,
+                  height: 8,
+                  marginHorizontal: 5,
+                  marginTop: 0,
+                }}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderItem}
+                style={{width, paddingVertical: 40}}
               />
             </View>
-            <View style={[styles.card, {marginTop: 0}]}>
+            <View
+              style={[
+                styles.card,
+                {marginTop: 0, borderTopStartRadius: 30, borderTopEndRadius: 30, paddingBottom: 0},
+              ]}>
               <View style={[styles.rowCenterSpaced, styles.cardItem]}>
-                <Text style={{fontSize: 16, color: "#000000", fontWeight: "700"}}>
+                <Text style={{fontSize: 18, color: "#000000", fontWeight: "700"}}>
                   {product.name}
                 </Text>
-                <Button transparent onPress={this.shareProduct}>
+                {/* <Button transparent onPress={this.shareProduct}>
                   <Icon name="md-share" size={24} />
-                </Button>
+                </Button> */}
+                <View style={{alignItems: "center"}}>
+                  <Text
+                    style={
+                      (!isEmpty(variation) && variation.in_stock) || product.in_stock
+                        ? {color: "green"}
+                        : {color: "gray"}
+                    }>
+                    {product.in_stock ? "In stock" : "Out of stock"}
+                  </Text>
+                  {product.type != "grouped" && (
+                    <QuantitySelector
+                      minusClick={this._decreaseCounter}
+                      plusClick={this._increaseCounter}
+                      quantity={this.state.quantity}
+                    />
+                  )}
+                </View>
+              </View>
+              <View style={{flexDirection: "row", alignItems: "center", paddingHorizontal: 16}}>
+                <StarRating
+                  disabled
+                  maxStars={5}
+                  rating={parseInt(product.average_rating)}
+                  containerStyle={{justifyContent: "flex-start"}}
+                  starStyle={{marginEnd: 5}}
+                  starSize={14}
+                  halfStarEnabled
+                  emptyStarColor={accent_color}
+                  fullStarColor={accent_color}
+                  halfStarColor={accent_color}
+                />
+                <Text>{product.rating_count || 0}</Text>
               </View>
 
               {product.short_description != "" && (
-                <HTMLRender html={product.short_description} containerStyle={styles.cardItem} />
+                <View style={{marginTop: 10}}>
+                  <Text style={styles.cardItemHeader}>Product Details</Text>
+                  <HTMLRender html={product.short_description} containerStyle={styles.cardItem} />
+                </View>
               )}
 
-              <View style={[styles.rowCenterSpaced, styles.cardItem]}>
-                <HTMLRender
-                  html={variation.price_html || product.price_html}
-                  baseFontStyle={{fontSize: 16, fontWeight: "500"}}
-                  containerStyle={{paddingTop: 8}}
-                />
-                <Text
-                  style={
-                    (!isEmpty(variation) && variation.in_stock) || product.in_stock
-                      ? {color: "green"}
-                      : {color: "gray"}
-                  }>
-                  {product.in_stock ? "In stock" : "Out of stock"}
-                </Text>
-              </View>
-
-              {product.type != "grouped" && (
-                <View style={[styles.rowCenterSpaced, styles.cardItem]}>
-                  <Text>Quantity</Text>
-                  <QuantitySelector
-                    minusClick={this._decreaseCounter}
-                    plusClick={this._increaseCounter}
-                    quantity={this.state.quantity}
+              {product.variations.length > 0 && attributes.length > 0 && (
+                <View style={[styles.card, {paddingBottom: 0, paddingHorizontal: 8}]}>
+                  <Text style={[styles.cardItemHeader, {paddingBottom: 8, paddingStart: 8}]}>
+                    Variations
+                  </Text>
+                  <FlatGrid
+                    items={attributes}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={({item, index}) => {
+                      console.log(index);
+                      return (
+                        <CustomPicker
+                          options={item.options}
+                          getLabel={option => (option && option.slug ? option.name : option)}
+                          fieldTemplate={PickerField}
+                          placeholder={item.name}
+                          modalAnimationType="slide"
+                          onValueChange={this.onVariationChange(item)}
+                        />
+                      );
+                    }}
+                    itemDimension={180}
+                    spacing={8}
+                    itemContainerStyle={{justifyContent: "flex-start"}}
                   />
                 </View>
               )}
-            </View>
-            <View
-              style={[styles.card, styles.cardItem, {flexDirection: "row", alignItems: "center"}]}>
-              <StarRating
-                disabled
-                maxStars={5}
-                rating={parseInt(product.average_rating)}
-                containerStyle={{justifyContent: "flex-start"}}
-                starStyle={{marginEnd: 5}}
-                starSize={14}
-                halfStarEnabled
-                emptyStarColor={accent_color}
-                fullStarColor={accent_color}
-                halfStarColor={accent_color}
-              />
-              <Text>({product.rating_count || 0})</Text>
-              <Button onPress={this.gotoReviews(product)}>
-                <Text> See all reviews</Text>
-              </Button>
-            </View>
-            {product.variations.length > 0 && attributes.length > 0 && (
-              <View style={[styles.card, {paddingBottom: 0, paddingHorizontal: 8}]}>
-                <Text style={[styles.cardItemHeader, {paddingBottom: 8, paddingStart: 8}]}>
-                  Variations
-                </Text>
-                <FlatGrid
-                  items={attributes}
-                  keyExtractor={this._keyExtractor}
-                  renderItem={({item, index}) => {
-                    console.log(index);
-                    return (
-                      <CustomPicker
-                        options={item.options}
-                        getLabel={(option) => (option && option.slug ? option.name : option)}
-                        fieldTemplate={PickerField}
-                        placeholder={item.name}
-                        modalAnimationType="slide"
-                        onValueChange={this.onVariationChange(item)}
-                      />
-                    );
-                  }}
-                  itemDimension={180}
-                  spacing={8}
-                  itemContainerStyle={{justifyContent: "flex-start"}}
-                />
-              </View>
-            )}
-            {product.group && product.group.length > 0 && (
-              <View style={styles.card}>
-                <Text style={styles.cardItemHeader}>Group Products</Text>
-                <FlatList
-                  data={product.group}
-                  renderItem={this._renderItem}
-                  keyExtractor={this._keyExtractor}
-                />
-              </View>
-            )}
-            {pincode_active && (
-              <View style={styles.card}>
-                <Text style={styles.cardItemHeader}>{t("DELIVERY_OPTIONS")}</Text>
-                {!deliverDetails.hasOwnProperty("delivery") ? (
-                  <View
-                    style={{
-                      paddingHorizontal: 16,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}>
-                    <TextInput
-                      placeholder={t("ENTER_POSTCODE")}
-                      value={postcode}
-                      onChangeText={(text) => this.setState({postcode: text})}
-                    />
-                    <Button
-                      style={{
-                        // backgroundColor: accent_color,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: 40,
-                        paddingHorizontal: 10,
-                      }}
-                      onPress={this.submitPostcode}>
-                      <Text style={{color: accent_color}}>Apply</Text>
-                    </Button>
-                  </View>
-                ) : (
-                  postcode != "" &&
-                  deliverDetails.hasOwnProperty("delivery") && (
+              {product.group && product.group.length > 0 && (
+                <View style={styles.card}>
+                  <Text style={styles.cardItemHeader}>Group Products</Text>
+                  <FlatList
+                    data={product.group}
+                    renderItem={this._renderItem}
+                    keyExtractor={this._keyExtractor}
+                  />
+                </View>
+              )}
+              {pincode_active && (
+                <View style={styles.card}>
+                  <Text style={styles.cardItemHeader}>{t("DELIVERY_OPTIONS")}</Text>
+                  {!deliverDetails.hasOwnProperty("delivery") ? (
                     <View
                       style={{
-                        justifyContent: "space-between",
+                        paddingHorizontal: 16,
                         flexDirection: "row",
-                        marginHorizontal: 16,
+                        justifyContent: "space-between",
                       }}>
-                      <Text>
-                        Delivery {deliverDetails.delivery ? "" : "not"} available at -{" "}
-                        <Text style={{fontWeight: "600"}}>{postcode}</Text>
-                      </Text>
-                      <Button onPress={this.changePostcode}>
-                        <Text style={{color: accent_color}}>Change</Text>
+                      <TextInput
+                        placeholder={t("ENTER_POSTCODE")}
+                        value={postcode}
+                        onChangeText={text => this.setState({postcode: text})}
+                      />
+                      <Button
+                        style={{
+                          // backgroundColor: accent_color,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: 40,
+                          paddingHorizontal: 10,
+                        }}
+                        onPress={this.submitPostcode}>
+                        <Text style={{color: accent_color}}>Apply</Text>
                       </Button>
                     </View>
-                  )
-                )}
-
-                {postcode != "" &&
-                  deliverDetails.hasOwnProperty("delivery") &&
-                  deliverDetails.delivery && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginTop: 16,
-                        paddingTop: 16,
-                        borderTopWidth: 1,
-                        borderTopColor: "#d2d2d2",
-                      }}>
-                      <View style={styles.pincodeView}>
-                        <Icon type="MaterialIcons" name="location-on" size={24} />
-                        <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>LOCATION</Text>
-                        <Text style={styles.pincodeText}>
-                          {deliverDetails.city + "," + deliverDetails.state}
+                  ) : (
+                    postcode != "" &&
+                    deliverDetails.hasOwnProperty("delivery") && (
+                      <View
+                        style={{
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                          marginHorizontal: 16,
+                        }}>
+                        <Text>
+                          Delivery {deliverDetails.delivery ? "" : "not"} available at -{" "}
+                          <Text style={{fontWeight: "600"}}>{postcode}</Text>
                         </Text>
+                        <Button onPress={this.changePostcode}>
+                          <Text style={{color: accent_color}}>Change</Text>
+                        </Button>
                       </View>
-                      <View style={styles.pincodeView}>
-                        <Icon type="MaterialIcons" name="date-range" size={24} />
-                        <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>
-                          DELIVERY BY
-                        </Text>
-                        {deliverDetails.delivery_date != "" && (
-                          <Text style={styles.pincodeText}>{deliverDetails.delivery_date}</Text>
-                        )}
-                      </View>
-                      <View style={styles.pincodeView}>
-                        <Icon name="ios-cash" size={24} />
-                        <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>COD</Text>
-                        <Text style={styles.pincodeText}>{deliverDetails.cod_message}</Text>
-                      </View>
-                    </View>
+                    )
                   )}
-              </View>
-            )}
-            <View style={styles.card}>
-              <Text style={styles.cardItemHeader}>Specification</Text>
-              <View style={styles.cardItem}>
-                <SpecificationRow
-                  leftContent="Categories"
-                  rightContent={product.categories.map((item) => item.name).join(", ")}
-                />
 
-                {product.hasOwnProperty("total_sales") && (
-                  <SpecificationRow leftContent="Total Sales" rightContent={product.total_sales} />
-                )}
-
-                {product.stock_quantity && (
+                  {postcode != "" &&
+                    deliverDetails.hasOwnProperty("delivery") &&
+                    deliverDetails.delivery && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 16,
+                          paddingTop: 16,
+                          borderTopWidth: 1,
+                          borderTopColor: "#d2d2d2",
+                        }}>
+                        <View style={styles.pincodeView}>
+                          <Icon type="MaterialIcons" name="location-on" size={24} />
+                          <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>
+                            LOCATION
+                          </Text>
+                          <Text style={styles.pincodeText}>
+                            {deliverDetails.city + "," + deliverDetails.state}
+                          </Text>
+                        </View>
+                        <View style={styles.pincodeView}>
+                          <Icon type="MaterialIcons" name="date-range" size={24} />
+                          <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>
+                            DELIVERY BY
+                          </Text>
+                          {deliverDetails.delivery_date != "" && (
+                            <Text style={styles.pincodeText}>{deliverDetails.delivery_date}</Text>
+                          )}
+                        </View>
+                        <View style={styles.pincodeView}>
+                          <Icon name="ios-cash" size={24} />
+                          <Text style={{fontSize: 12, fontWeight: 600, marginTop: 8}}>COD</Text>
+                          <Text style={styles.pincodeText}>{deliverDetails.cod_message}</Text>
+                        </View>
+                      </View>
+                    )}
+                </View>
+              )}
+              <View style={[styles.card, {paddingBottom: 0}]}>
+                <Text style={styles.cardItemHeader}>Specification</Text>
+                <View style={styles.cardItem}>
                   <SpecificationRow
-                    leftContent="Stock Quantity"
-                    rightContent={product.stock_quantity}
+                    leftContent="Categories"
+                    rightContent={product.categories.map(item => item.name).join(", ")}
                   />
-                )}
 
-                {product.hasOwnProperty("sku") && product.sku != "" && (
-                  <SpecificationRow leftContent="SKU" rightContent={product.sku} />
-                )}
-                {product.hasOwnProperty("weight") && product.weight != "" && (
-                  <SpecificationRow leftContent="Weight" rightContent={product.stock_quantity} />
-                )}
+                  {product.hasOwnProperty("total_sales") && (
+                    <SpecificationRow
+                      leftContent="Total Sales"
+                      rightContent={product.total_sales}
+                    />
+                  )}
 
-                {product.attributes.map((item, index) => (
-                  <SpecificationRow
-                    leftContent={item.name}
-                    rightContent={item.options.map((opt) => (opt.slug ? opt.name : opt)).join(", ")}
-                    key={item.name + index}
-                  />
-                ))}
+                  {product.stock_quantity && (
+                    <SpecificationRow
+                      leftContent="Stock Quantity"
+                      rightContent={product.stock_quantity}
+                    />
+                  )}
+
+                  {product.hasOwnProperty("sku") && product.sku != "" && (
+                    <SpecificationRow leftContent="SKU" rightContent={product.sku} />
+                  )}
+                  {product.hasOwnProperty("weight") && product.weight != "" && (
+                    <SpecificationRow leftContent="Weight" rightContent={product.stock_quantity} />
+                  )}
+
+                  {product.attributes.map((item, index) => (
+                    <SpecificationRow
+                      leftContent={item.name}
+                      rightContent={item.options.map(opt => (opt.slug ? opt.name : opt)).join(", ")}
+                      key={item.name + index}
+                    />
+                  ))}
+                </View>
               </View>
+              {product.description != "" && (
+                <View style={[styles.card, {marginTop: 0}]}>
+                  <Text style={styles.cardItemHeader}>Description</Text>
+                  <HTMLRender html={product.short_description} containerStyle={styles.cardItem} />
+                </View>
+              )}
+              {product.upsell && product.upsell.length > 0 && (
+                <View style={[styles.card, {marginTop: 0}]}>
+                  <Text style={styles.cardItemHeader}>Products you may like</Text>
+                  <ProductsRow keyPrefix="product" products={product.upsell} />
+                </View>
+              )}
+              {product.related && product.related.length > 0 && (
+                <View style={[styles.card, {marginTop: 0}]}>
+                  <Text style={styles.cardItemHeader}>Related Products</Text>
+                  <ProductsRow keyPrefix="product" products={product.related} />
+                </View>
+              )}
             </View>
-            {product.description != "" && (
-              <View style={styles.card}>
-                <Text style={styles.cardItemHeader}>Description</Text>
-                <HTMLRender html={product.short_description} containerStyle={styles.cardItem} />
-              </View>
-            )}
-            {product.upsell && product.upsell.length > 0 && (
-              <View style={styles.card}>
-                <Text style={styles.cardItemHeader}>Products you may like</Text>
-                <ProductsRow keyPrefix="product" products={product.upsell} />
-              </View>
-            )}
-            {product.related && product.related.length > 0 && (
-              <View style={styles.card}>
-                <Text style={styles.cardItemHeader}>Related Products</Text>
-                <ProductsRow keyPrefix="product" products={product.related} />
-              </View>
-            )}
             {loading && <ActivityIndicator style={{flex: 1}} />}
           </ScrollView>
 
           {/* Footer Content */}
           {(product.purchasable ||
             (product.type === "external" && product.external_url) ||
-            product.type === "grouped") && (
+            product.type === "grouped" ||
+            product.type === "simple") && (
             <View style={styles.footer}>
               {product.type === "external" ? (
                 <Fragment>
@@ -714,18 +742,34 @@ class ProductDetailScreen extends React.PureComponent {
                 </Fragment>
               ) : (
                 ((!isEmpty(variation) && variation.in_stock) || product.in_stock) && (
-                  <Fragment>
-                    <Button
-                      onPress={() => this._handleAddToCart(true)}
-                      style={[styles.footerButton, {backgroundColor: "#f7f7f7"}]}>
-                      <Text>Buy Now</Text>
-                    </Button>
-                    <Button
-                      style={[styles.footerButton, {backgroundColor: accent_color}]}
-                      onPress={() => this._handleAddToCart(false)}>
-                      <Text style={{color: "white"}}>Add to Cart</Text>
-                    </Button>
-                  </Fragment>
+                  <View style={{flexDirection: "row", justifyContent: "space-between", flex: 1}}>
+                    <View style={{alignItems: "center", justifyContent: "center", flex: 1}}>
+                      <HTMLRender
+                        html={variation.price_html || product.price_html}
+                        baseFontStyle={{fontSize: 18, fontWeight: "500"}}
+                        containerStyle={{paddingStart: 8}}
+                      />
+                    </View>
+                    <View style={{flexDirection: "row"}}>
+                      <Button
+                        style={[
+                          styles.footerButton,
+                          {backgroundColor: "#F58000", paddingHorizontal: 16, marginEnd: 10},
+                        ]}
+                        onPress={() => this._handleAddToCart(false)}>
+                        {/* <Text>Add to Cart</Text> */}
+                        <Icon type="MaterialIcons" name="bookmark" size={24} color={"#fff"} />
+                      </Button>
+                      <Button
+                        onPress={() => this._handleAddToCart(true)}
+                        style={[
+                          styles.footerButton,
+                          {backgroundColor: "#F58000", paddingHorizontal: 32},
+                        ]}>
+                        <Text style={{color: "white", fontWeight: "500"}}>Buy Now</Text>
+                      </Button>
+                    </View>
+                  </View>
                 )
               )}
             </View>
@@ -773,17 +817,19 @@ function PickerField({selectedItem, defaultText, getLabel, clear}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#F8F6F7",
   },
   footer: {
-    width: "100%",
     flexDirection: "row",
+    padding: 8,
+    borderRadius: 8,
+    marginHorizontal: 8,
   },
   footerButton: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     minHeight: 48,
+    borderRadius: 8,
   },
   rowCenterSpaced: {
     flexDirection: "row",
@@ -795,6 +841,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingVertical: 16,
     marginTop: 10,
+    elevation: 2,
   },
   cardItemHeader: {
     fontSize: 16,
@@ -824,7 +871,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   appSettings: state.appSettings,
   shipping: state.shipping,
 });
@@ -832,4 +879,7 @@ const mapDispatchToProps = {
   getCartCount,
   changeShippingPincode,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ProductDetailScreen));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(ProductDetailScreen));

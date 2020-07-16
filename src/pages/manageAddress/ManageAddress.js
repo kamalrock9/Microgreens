@@ -32,7 +32,9 @@ function ManageAddress() {
             />
           </Button>
         </View>
-        <Text style={styles.txt}>{user.billing.company ? user.billing.company : null}</Text>
+        {user.billing.company && (
+          <Text style={styles.txt}>{user.billing.company ? user.billing.company : null}</Text>
+        )}
         <Text style={styles.txt}>
           {user.billing.first_name && user.billing.last_name
             ? user.billing.first_name + " " + user.billing.last_name
@@ -52,7 +54,7 @@ function ManageAddress() {
         </Text>
       </View>
 
-      <View style={styles.line}></View>
+      <View style={styles.line} />
 
       <View style={styles.view}>
         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
@@ -68,7 +70,9 @@ function ManageAddress() {
             />
           </Button>
         </View>
-        <Text style={styles.txt}>{user.shipping.company ? user.shipping.company : null}</Text>
+        {user.shipping.company != "" && (
+          <Text style={styles.txt}>{user.shipping.company ? user.shipping.company : null}</Text>
+        )}
         <Text style={styles.txt}>
           {user.shipping.first_name && user.shipping.last_name
             ? user.shipping.first_name + " " + user.shipping.last_name
@@ -88,7 +92,7 @@ function ManageAddress() {
         </Text>
       </View>
 
-      <View style={styles.line}></View>
+      <View style={styles.line} />
 
       <Text style={{marginHorizontal: 16, marginTop: 16}}>{t("ADDRESS_USE")}</Text>
     </View>

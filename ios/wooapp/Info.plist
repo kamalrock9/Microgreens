@@ -135,6 +135,12 @@
 		<string>Inter-SemiBoldItalic.ttf</string>
 		<string>Inter-Thin.ttf</string>
 		<string>Inter-ThinItalic.ttf</string>
+		<string>MavenPro-Black.ttf</string>
+		<string>MavenPro-Bold.ttf</string>
+		<string>MavenPro-ExtraBold.ttf</string>
+		<string>MavenPro-Medium.ttf</string>
+		<string>MavenPro-Regular.ttf</string>
+		<string>MavenPro-SemiBold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

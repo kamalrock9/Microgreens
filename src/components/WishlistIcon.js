@@ -23,12 +23,12 @@ class WishlistIcon extends React.PureComponent {
     return (
       <Button style={StyleSheet.flatten(style)} onPress={this._handleWishlist}>
         <Icon
-          name={this.isWishlist() ? "heart" : "heart-outline"}
+          name={"heart"}
           type="MaterialCommunityIcons"
           style={{
-            color: appSettings.accent_color,
-            margin: 4,
-            fontSize: 24,
+            color: this.isWishlist() ? appSettings.accent_color : "#fff",
+            // margin: 4,
+            fontSize: 20,
           }}
         />
       </Button>
@@ -46,4 +46,7 @@ mapDispatchToProps = {
   deleteWishlist,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(WishlistIcon);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WishlistIcon);

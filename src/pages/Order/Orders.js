@@ -16,6 +16,10 @@ function Orders({navigation}) {
   const [page, setpage] = useState(1);
 
   useEffect(() => {
+    const subscription = navigation.addListener("didFocus", () => {
+      loadOrder();
+    });
+    subscription.remove();
     loadOrder();
   }, []);
 

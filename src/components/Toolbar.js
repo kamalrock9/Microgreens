@@ -1,5 +1,5 @@
 import React from "react";
-import {View, StyleSheet, StatusBar} from "react-native";
+import {View, StyleSheet, StatusBar, Image} from "react-native";
 import Text from "./Text";
 import Button from "./Button";
 import Icon from "./IconNB";
@@ -52,7 +52,12 @@ function Toolbar({
       <View style={[styles.container, {backgroundColor: primary_color}]}>
         {menuButton && (
           <Button onPress={navigation.openDrawer} style={styles.menuButton}>
-            <Icon color={primary_color_text} name="md-menu" size={24} />
+            {/* <Icon color={primary_color_text} name="md-menu" size={24} /> */}
+            <Image
+              source={require("../assets/imgs/menu.png")}
+              style={{width: 30, height: 15}}
+              resizeMode="contain"
+            />
           </Button>
         )}
         {backButton && (
@@ -102,7 +107,12 @@ function Toolbar({
             <Button
               onPress={goTo("Cart")}
               style={[styles.menuButton, {paddingVertical: 16, paddingHorizontal: 10}]}>
-              <Icon color={primary_color_text} name="md-cart" size={24} />
+              {/* <Icon color={primary_color_text} name="md-cart" size={24} /> */}
+              <Image
+                source={require("../assets/imgs/bucket.png")}
+                style={{width: 30, height: 20}}
+                resizeMode="contain"
+              />
               {count > 0 && (
                 <View style={[styles.badge, {backgroundColor: toolbarbadgecolor || accent_color}]}>
                   <Text style={styles.badgeText}>{count}</Text>

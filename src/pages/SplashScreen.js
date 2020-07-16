@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Image, StyleSheet, View} from "react-native";
+import {Image, StyleSheet, View, Dimensions} from "react-native";
 import {saveAppSettings, getCartCount} from "store/actions";
 import {useSelector, useDispatch} from "react-redux";
 import {isEmpty} from "lodash";
@@ -27,34 +27,43 @@ i18n
     },
   });
 
+const {width, height} = Dimensions.get("screen");
 function SplashScreen({navigation}) {
   const appSettings = useSelector(state => state.appSettings);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (isEmpty(appSettings)) {
+      Toast.show("If part", Toast.LONG);
       console.log("wait");
-
       ApiClient.get("/app-settings")
         .then(({data}) => {
+          console.log("splash");
           dispatch(saveAppSettings(data));
           navigation.navigate("Drawer");
         })
         .catch(() => {
+          Toast.show("IF catch part", Toast.LONG);
           Toast.show("Something went wrong! Try again");
         });
     } else {
+      console.log("else part");
+      Toast.show("Else part", Toast.LONG);
       navigation.navigate("Drawer");
-      ApiClient.get("/app-settings").then(({data}) => {
-        dispatch(saveAppSettings(data));
-      });
+      ApiClient.get("/app-settings")
+        .then(({data}) => {
+          dispatch(saveAppSettings(data));
+        })
+        .catch(() => {
+          Toast.show("Something went wrong! Try again");
+        });
     }
     dispatch(getCartCount());
   }, []);
 
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/icon/icon.png")} style={{width: 112, height: 112}} />
+      <Image source={require("../assets/imgs/splash.png")} style={{width, height}} />
     </View>
   );
 }
