@@ -34,7 +34,6 @@ function SplashScreen({navigation}) {
 
   useEffect(() => {
     if (isEmpty(appSettings)) {
-      Toast.show("If part", Toast.LONG);
       console.log("wait");
       ApiClient.get("/app-settings")
         .then(({data}) => {
@@ -42,19 +41,18 @@ function SplashScreen({navigation}) {
           dispatch(saveAppSettings(data));
           navigation.navigate("Drawer");
         })
-        .catch(() => {
-          Toast.show("IF catch part", Toast.LONG);
+        .catch(error => {
+          alert(error.toString());
           Toast.show("Something went wrong! Try again");
         });
     } else {
-      console.log("else part");
-      Toast.show("Else part", Toast.LONG);
       navigation.navigate("Drawer");
       ApiClient.get("/app-settings")
         .then(({data}) => {
           dispatch(saveAppSettings(data));
         })
-        .catch(() => {
+        .catch(error => {
+          alert(error.toString());
           Toast.show("Something went wrong! Try again");
         });
     }
