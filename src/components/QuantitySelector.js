@@ -23,7 +23,7 @@ class QuantitySelector extends Component {
             borderColor: "#efefef",
           }}
           onPress={this.props.minusClick}>
-          <Text style={{fontSize: 25, color: "#fff"}}>-</Text>
+          <Text style={{fontSize: 25, color: "#fff", marginTop: -4}}>-</Text>
         </TouchableOpacity>
         <Text
           style={{
@@ -45,7 +45,7 @@ class QuantitySelector extends Component {
             borderRadius: 8,
           }}
           onPress={this.props.plusClick}>
-          <Text style={{fontSize: 25, color: "#fff"}}>+</Text>
+          <Text style={{fontSize: 25, color: "#fff", marginTop: -4}}>+</Text>
         </TouchableOpacity>
       </View>
     );

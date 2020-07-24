@@ -666,7 +666,7 @@ class ProductDetailScreen extends React.PureComponent {
                     )}
                 </View>
               )}
-              <View style={[styles.card, {paddingBottom: 0}]}>
+              <View style={[styles.card, {paddingBottom: 0, marginTop: 0}]}>
                 <Text style={styles.cardItemHeader}>Specification</Text>
                 <View style={styles.cardItem}>
                   <SpecificationRow
@@ -742,14 +742,17 @@ class ProductDetailScreen extends React.PureComponent {
                 </Fragment>
               ) : (
                 ((!isEmpty(variation) && variation.in_stock) || product.in_stock) && (
-                  <View style={{flexDirection: "row", justifyContent: "space-between", flex: 1}}>
-                    <View style={{alignItems: "center", justifyContent: "center", flex: 1}}>
-                      <HTMLRender
-                        html={variation.price_html || product.price_html}
-                        baseFontStyle={{fontSize: 18, fontWeight: "500"}}
-                        containerStyle={{paddingStart: 8}}
-                      />
-                    </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      flex: 1,
+                      alignItems: "center",
+                    }}>
+                    <HTMLRender
+                      html={variation.price_html || product.price_html}
+                      baseFontStyle={{fontSize: 18, fontWeight: "500"}}
+                    />
                     <View style={{flexDirection: "row"}}>
                       <Button
                         style={[

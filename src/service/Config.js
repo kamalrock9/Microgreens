@@ -12,7 +12,7 @@ const Constants = {
 
 const ConstantsDemo = {
   storeName: "Microgreens",
-  baseURL: "http://3.7.234.56/",
+  baseURL: "https://microgreens.co.in/",
   path: "/wp-json/wc/v2",
   keys: {
     consumerKey: "ck_1edc598771d51f6d0de60add1740d70586e7ae8a",

@@ -146,8 +146,8 @@ function PaymentPage({navigation}) {
       description: "Order  " + data.id,
       image: "",
       currency: data.currency,
-      //key: "rzp_live_Mw6y1rFt9AqPGr",
-      key: "rzp_test_AZkb1ZLjZv6vRh",
+      key: "rzp_live_VLQmD1GEpp5FA0",
+      //key: "rzp_test_AZkb1ZLjZv6vRh",
       amount: parseFloat(data.total) * 100,
       name: Constants.storeName,
       prefill: {
