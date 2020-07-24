@@ -5491,11 +5491,6 @@ react-native-onesignal@^3.6.5:
   dependencies:
     invariant "^2.2.2"
 
-react-native-paytm@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/react-native-paytm/-/react-native-paytm-1.0.9.tgz#5d7e02bb4db1e51529d66d7c0faeb89b84ee7c0e"
-  integrity sha512-2oyzhPxwP/GXTHb/3TOlnmAfaa/msg7ejeqcLkQZD6d5HTEgNeZdT95uZvhc6sL/UOAMgvwDFkQngr3o9EJYhg==
-
 react-native-raw-bottom-sheet@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.0.6.tgz#485dedc3e1828f2d55179bb598ef58987c41ebf1"
