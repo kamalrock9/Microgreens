@@ -251,6 +251,7 @@ class ProductDetailScreen extends React.PureComponent {
   };
 
   _handleAddToCart = (isBuyNow = false) => {
+    console.log("response");
     const {product, quantity, variation, selectedAttrs} = this.state;
     let data = {id: this.state.product.id};
 
@@ -302,7 +303,7 @@ class ProductDetailScreen extends React.PureComponent {
         return;
       }
     }
-
+    console.log(data);
     ApiClient.post("/cart/add", data)
       .then(({data}) => {
         this.setState({
@@ -382,9 +383,9 @@ class ProductDetailScreen extends React.PureComponent {
     this.props.changeShippingPincode(this.state.postcode);
     this.setState({loading: true});
     ApiClient.post("/checkpincode/", param)
-      .then(({data}) => {
-        console.log(data);
-        this.setState({loading: false, deliverDetails: data});
+      .then(res => {
+        console.log(res);
+        this.setState({loading: false, deliverDetails: res.data});
       })
       .catch(error => {
         this.setState({loading: false});
