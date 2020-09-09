@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import {View, StyleSheet, TouchableWithoutFeedback} from "react-native";
+import {View, StyleSheet, TouchableWithoutFeedback, Image} from "react-native";
 import {useSelector} from "react-redux";
 import {useNavigation} from "react-navigation-hooks";
 import {HTMLRender, Text, WishlistIcon} from "components";
 import StarRating from "react-native-star-rating";
-import FitImage from "react-native-fit-image";
+//import FitImage from "react-native-fit-image";
 
 function ProductItem({containerStyle, width: width, item}) {
   const navigation = useNavigation();
@@ -20,8 +20,14 @@ function ProductItem({containerStyle, width: width, item}) {
     <TouchableWithoutFeedback onPress={goToProductDetails}>
       <View style={[containerStyle, styles.container, {width}]}>
         {item.images.length > 0 && (
-          <FitImage
-            style={{borderTopLeftRadius: 20, borderTopRightRadius: 20}}
+          <Image
+            resizeMode="contain"
+            style={{
+              width: width - 1,
+              height: 150,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+            }}
             source={{uri: item.images[0].src}}
             indicatorColor={accent_color}
           />
@@ -70,7 +76,7 @@ function ProductItem({containerStyle, width: width, item}) {
             </Text>
           </View>
         )}
-        <WishlistIcon style={styles.right} item={item} />
+        <WishlistIcon style={[styles.right, {backgroundColor: accent_color}]} item={item} />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -99,7 +105,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "#4EB5AC",
     alignItems: "center",
     justifyContent: "center",
     marginEnd: 4,

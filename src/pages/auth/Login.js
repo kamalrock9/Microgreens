@@ -3,7 +3,7 @@ import {View, StyleSheet, ImageBackground, Dimensions, ActivityIndicator} from "
 import {Icon, Text, Button, FloatingTextinput} from "components";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import {useTranslation} from "react-i18next";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Constants from "service/Config";
 import {ApiClient} from "service";
 import {user, saveShipping} from "store/actions";
@@ -51,6 +51,7 @@ function Auth({navigation}) {
   console.log(NeedRegister);
   const {t} = useTranslation();
   const dispatchAction = useDispatch();
+  const {accent_color} = useSelector(state => state.appSettings);
   const [state, dispatch] = useReducer(reducer, initialState);
   const scrollRef = useRef(null);
 
@@ -260,9 +261,10 @@ function Auth({navigation}) {
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/imgs/login-background.jpg")}
-      style={styles.container}>
+    // <ImageBackground
+    //   source={require("../../assets/imgs/login-background.jpg")}
+    //   style={styles.container}>
+    <View style={[{backgroundColor: accent_color}, styles.container]}>
       <Button style={{padding: 8, alignSelf: "flex-start"}} onPress={goback}>
         <Icon name="close" size={24} color="#FFF" type="MaterialCommunityIcons" />
       </Button>
@@ -313,7 +315,7 @@ function Auth({navigation}) {
           </Button>
 
           <Button style={styles.btn} onPress={_login}>
-            <Text style={styles.btnText}>{t("SIGN_IN")}</Text>
+            <Text style={[styles.btnText, {color: accent_color}]}>{t("SIGN_IN")}</Text>
           </Button>
           <View style={{width: "100%", flexDirection: "row", marginTop: 20, alignItems: "center"}}>
             <Text style={styles.socialBtnText}>{t("DONT_HAVE_ACCOUNT")}</Text>
@@ -392,7 +394,7 @@ function Auth({navigation}) {
           </View>
 
           <Button style={styles.btn} onPress={_register}>
-            <Text style={styles.btnText}>{t("SIGN_UP")}</Text>
+            <Text style={[styles.btnText, {color: accent_color}]}>{t("SIGN_UP")}</Text>
           </Button>
           <Text style={[styles.socialBtnText, {marginTop: 15}]}>
             By Singing up you will agree to our Privacy Policy and Terms
@@ -410,7 +412,8 @@ function Auth({navigation}) {
       {loading && (
         <ActivityIndicator style={{alignItems: "center", justifyContent: "center", flex: 1}} />
       )}
-    </ImageBackground>
+      {/* </ImageBackground> */}
+    </View>
   );
 }
 

@@ -64,6 +64,7 @@ const HomeStack = createStackNavigator(
     Auth,
     Reviews,
     AddReview,
+    ProductScreen,
   },
   {
     defaultNavigationOptions: {

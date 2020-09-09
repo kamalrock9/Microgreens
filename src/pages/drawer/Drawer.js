@@ -85,15 +85,22 @@ class Drawer extends React.PureComponent {
     return (
       <>
         <View style={styles.container}>
-          <View style={styles.header}>
-            <Icon name="account-circle" type="MaterialCommunityIcons" style={{fontSize: 54}} />
+          <View style={[styles.header, {backgroundColor: primary_color}]}>
+            <Icon
+              name="account-circle"
+              type="MaterialCommunityIcons"
+              style={{fontSize: 64}}
+              color={"#fff"}
+            />
             {isEmpty(user) ? (
-              <Text style={{fontSize: 16}} onPress={this.openModal}>
+              <Text
+                style={{fontSize: 16, fontWeight: "500", color: "#fff"}}
+                onPress={this.openModal}>
                 {t("LOGIN/REGISTER")}
               </Text>
             ) : (
               <View style={{alignItems: "center"}}>
-                <Text style={{fontSize: 16}}>
+                <Text style={{fontSize: 16, fontWeight: "500", color: "#fff"}}>
                   {user.first_name && user.last_name
                     ? user.first_name + " " + user.last_name
                     : user.first_name
